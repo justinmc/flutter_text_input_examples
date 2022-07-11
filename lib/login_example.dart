@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 // TODO(justinmc): Darkmode with switcher.
 
 class LoginExample extends StatelessWidget {
-  const LoginExample({
+  LoginExample({
     Key? key,
   }) : super(key: key);
 
@@ -12,7 +12,14 @@ class LoginExample extends StatelessWidget {
   static const String title = 'Login Example';
   static const String subtitle = 'A basic login form with a faked API.';
 
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+  final FocusNode _submitFocusNode = FocusNode();
+
+  String _email = '';
+
   void _onSubmit() {
+    // TODO(justinmc): Call a fake API and do full error/loading/success states.
     print('justin submitted');
   }
 
@@ -31,12 +38,27 @@ class LoginExample extends StatelessWidget {
                 const SizedBox(
                   height: 20.0,
                 ),
+                // TODO(justinmc): Does this work with autofill like this?
                 TextFormField(
-                  decoration: const InputDecoration(
-                    hintText: 'Email',
+                  focusNode: _emailFocusNode,
+                  restorationId: 'email_field',
+                  textInputAction: TextInputAction.next,
+                  //focusNode: _email,
+                  decoration: InputDecoration(
+                    filled: true,
+                    icon: const Icon(Icons.email),
+                    hintText: 'Enter your email address.',//localizations.demoTextFieldYourEmailAddress,
+                    labelText: 'Email',//localizations.demoTextFieldEmail,
                   ),
+                  keyboardType: TextInputType.emailAddress,
+                  onSaved: (String? value) {
+                    _email = value ?? '';
+                    _passwordFocusNode.requestFocus();
+                  },
                 ),
+                // TODO(justinmc): Make this field nice like the above field.
                 TextFormField(
+                  focusNode: _passwordFocusNode,
                   obscureText: true,
                   decoration: const InputDecoration(
                     hintText: 'Password',
@@ -46,6 +68,7 @@ class LoginExample extends StatelessWidget {
                   height: 40.0,
                 ),
                 ElevatedButton(
+                  focusNode: _submitFocusNode,
                   onPressed: _onSubmit,
                   child: const Text('Submit'),
                 ),
